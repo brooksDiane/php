@@ -5,13 +5,11 @@
   <title>Registration page</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <style>
-    label {
-      display: block;
-    }
-
-
-    button {
+    form {
       margin-top: 2rem;
     }
   </style>
@@ -25,11 +23,13 @@
     $conn=mysqli_connect('localhost','root','','db') or die(mysql_error());
     mysqli_select_db($conn,'db');
 
+
     $firstname = $_POST['firstname'];
     $lastname = $_POST['lastname'];
     $date = $_POST["date"];
-
-    $email = $_POST['email'];
+    $phone = $_POST["phone"];
+    $email = $_POST["email"];
+    $gender = $_POST["gender"];
     $password = mysqli_real_escape_string($conn, $_POST["password"]);
 
     $_SESSION['email'] = $email;
@@ -38,10 +38,10 @@
     $result = mysqli_query($conn,$query);
 
     if(mysqli_num_rows($result) > 0){
-      $message = "Invalid Credentials , $email Or $username already exists. ";
+      $message = "Invalid Credentials, $email already exists. ";
       echo "<script type='text/javascript'>alert('$message');</script>"; 
     } else {
-      $sql = " INSERT INTO users (firstname, lastname, birthdate, email, password) VALUES ('$firstname','$lastname','$date','$email','$password')";
+      $sql = " INSERT INTO users (firstname, lastname, birthdate, phone, gender, email, password) VALUES ('$firstname','$lastname','$date','$phone','$gender','$email','$password')";
       mysqli_query($conn,$sql);
       header('location:profile.php');
     }
@@ -52,39 +52,55 @@
 
 <body onload='document.form.email.focus()'>
 
-<h1 >Login</h1>
+<form class="container register" name="form" action="register.php" method="post">
+  <div class="row">
+      <div class="col-md-9 register-right">
+          <div class="tab-content" id="myTabContent">
+              <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                  <h1 class="register-heading">Register</h1>
+                  <div class="row register-form">
+                      <div class="col-md-6">
+                          <div class="form-group">
+                              <input type="text" class="form-control" placeholder="First Name" name="firstname"/>
+                          </div>
+                          <div class="form-group">
+                              <input type="text" class="form-control" placeholder="Last Name" name="lastname"/>
+                          </div>
+                          <div class="form-group">
+                              <input type="password" class="form-control" placeholder="Password"  name="password"/>
+                          </div>
+                          <div class="form-group">
+                          <input type="date" class="form-control"  name=date />
+                          </div>
+                      </div>
+                      <div class="col-md-6">
+                          <div class="form-group">
+                              <input type="email" class="form-control" placeholder="Your Email" name="email"/>
+                          </div>
+                          <div class="form-group">
+                              <input type="text"  class="form-control" placeholder="Your Phone" value="" name="phone" />
+                          </div>
+                          <div class="form-group">
+                              <select class="form-control" name="gender">
+                                  <option class="hidden" disabled >Gender</option>
+                                  <option value=Female>Female</option>
+                                  <option value=Male>Male</option>
+                              </select>
+                          </div>
+                          <div class="form-group">
+                              <button class="btn btn-primary" style="width: 100%;" name="submit" type="submit" value="submit" onclick="return validateForm();">Register</button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
 
-  <div class="container">
-    <form name="form" action="register.php" method="post">
-
-      <label for="">
-        Firstname:
-        <input type="text" name="firstname">
-      </label>
-      
-      <label for="">
-        Lastname:
-        <input type="text" name="lastname">
-      </label>
-
-      <label for="">
-        Date of Birth:
-        <input type="date" name="date">
-      </label>
-
-      <label for="">
-        Email:
-        <input type="email" name="email">
-      </label>
-
-      <label for="">
-        Password:
-        <input type="password" name="password">
-      </label>
-
-      <button class="btn btn-primary" name="submit" type="submit" value="submit" onclick="return validateForm();">Register</button>
-    </form>
+      </div>
   </div>
+
+</form>
 </body>
+
+
 
 </html>
